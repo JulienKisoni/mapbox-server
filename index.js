@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const schema = require('./schema/schema');
+
 const app = express();
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -16,7 +18,8 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.use(bodyParser.json());
 app.use('/graphql', expressGraphQL({
-    graphiql: true
+    graphiql: true,
+    schema
 }));
 
 app.listen(4000, () => {

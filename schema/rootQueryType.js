@@ -25,8 +25,8 @@ const RootQueryType = new GraphQLObjectType({
                 return user;
             }
         },
-        pins: {
-            type: PinType,
+        getPins: {
+            type: new GraphQLList(PinType),
             async resolve() {
                 const pins = await Pin.find({}).exec();
                 return pins;

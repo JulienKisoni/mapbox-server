@@ -1,14 +1,15 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const app = express();
+const http = require('http').createServer(app);
 const expressGraphQL = require('express-graphql');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const schema = require('./schema/schema');
+const io = require('socket.io')(http);
 
-const app = express();
+const schema = require('./schema/schema');
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -24,6 +25,10 @@ app.use('/graphql', expressGraphQL({
     schema
 }));
 
-app.listen(4000, () => {
+io.on('connection', (socket) => {
+    console.log('client connected');
+})
+
+http.listen(4000, () => {
     console.log('app listening on port 4000');
 });

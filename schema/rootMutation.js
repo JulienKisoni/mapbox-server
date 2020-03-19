@@ -1,9 +1,12 @@
 const graphql = require('graphql');
 const { GraphQLObjectType, 
      GraphQLNonNull, GraphQLFloat } = graphql;
+const { PubSub } = require('apollo-server');
 
 const PinType = require('./pinType');
 const Pin = require('../models/pin');
+
+const pubsub = new PubSub();
 
 const RootMutationType = new GraphQLObjectType({
     name: 'RootMutationType',
@@ -20,6 +23,9 @@ const RootMutationType = new GraphQLObjectType({
                     latitude,
                     longitude
                 }).save();
+                pubsub.publish('PIN_ADDED_SUBSCRIPTION', { pin })
+                    .then(data => console.log('published', data, pin))
+                    .catch(e => console.log('not published', e));
                 return pin;
             }
         }
